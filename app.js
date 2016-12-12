@@ -37,9 +37,14 @@ if (app.get("env") === "development") {
         res.send("Error, hiJOO this route is not authORIizizejbefOUDNERIORORROHACKKKEDDHAXCKEDD THIS HAS SERVER HAS DHEHE SECURITY HAS BEEN DECRYPTED<EHE oncTENT INFORMATION BEING RETRIVED");                
     });
 }
+var portNum = 3001;
+app.listen(portNum, function (err) {
+    if (err) {
+        console.log('Error HIJOO for listening on port ' + portNum +"!");
+    }
+    console.log('Example app listening on port ' + portNum + "!");
 
-
-
+});
 
 
 
