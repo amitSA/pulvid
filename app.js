@@ -21,8 +21,8 @@ app.use(cookieParser());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/users', users);
+app.use('/webcast/', routes);
+app.use('/users/', users);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -33,11 +33,11 @@ app.use(function (req, res, next) {
 
 if (app.get("env") === "development") {
     app.use(function (err, req, res, next) {
-        //res.status(403); error status on header has allready been set by the above middleware function
-        res.send("Error, hiJOO this route is not authORIizizejbefOUDNERIORORROHACKKKEDDHAXCKEDD THIS HAS SERVER HAS DHEHE SECURITY HAS BEEN DECRYPTED<EHE oncTENT INFORMATION BEING RETRIVED");                
+        res.status(err.status || 400);
+        res.send("Error, this route was not found hijoOOOOOo");
     });
 }
-var portNum = 3001;
+var portNum = 3000;
 app.listen(portNum, function (err) {
     if (err) {
         console.log('Error HIJOO for listening on port ' + portNum +"!");
