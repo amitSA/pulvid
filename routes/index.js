@@ -26,7 +26,8 @@ router.get(/(foo)(goo)abc/, function (req, res, next) {
     res.send("in second get route");
 });
 
-router.get(/(.+)\W(\w+)\/(?:number|number\/)$/, function (req, res, next) {
+var className = "";
+router.get(/(.+)(\W?)(\w+)\/(?:number|number\/)$/, function (req, res, next) {
     var i = 0;
     while (typeof (req.params[i]) != "undefined") {
         console.log("param[" + i + "]: " + req.params[i]);
@@ -34,7 +35,18 @@ router.get(/(.+)\W(\w+)\/(?:number|number\/)$/, function (req, res, next) {
     }
     next();
 }, function (req, res, next) {
-
+    var className = req.params[0] + " " + req.params[1];
+    className = className.charAt(0) == '/' ? className.slice(1) : className;
+    console.log("parsed className: " + className);
+    jsdom.env("https://webcast.ucsc.edu",
+        ["https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"],
+        function (err, windows) {
+            if (err) {
+                console.log("jsdom error while trying to load to main webcast-course-link");
+                return;
+            }
+            console.log("hijOO website title: " + windows.$("#contentHeaderTitle").html());
+        });
     res.send("in next functionnn for this route, in second get route");
 
 });
