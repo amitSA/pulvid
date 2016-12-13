@@ -1,6 +1,7 @@
 ﻿var express = require('express');
 var router = express.Router();
 
+var jsdom = require('jsdom');
 
 
 /* GET home page. */
@@ -25,7 +26,7 @@ router.get(/(foo)(goo)abc/, function (req, res, next) {
     res.send("in second get route");
 });
 
-router.get(/(.+)\W(\w+)/, function (req, res, next) {
+router.get(/(.+)\W(\w+)\/(?:number|number\/)$/, function (req, res, next) {
     var i = 0;
     while (typeof (req.params[i]) != "undefined") {
         console.log("param[" + i + "]: " + req.params[i]);
@@ -33,6 +34,7 @@ router.get(/(.+)\W(\w+)/, function (req, res, next) {
     }
     next();
 }, function (req, res, next) {
+
     res.send("in next functionnn for this route, in second get route");
 
 });
