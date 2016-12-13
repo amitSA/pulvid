@@ -27,7 +27,8 @@ router.get(/(foo)(goo)abc/, function (req, res, next) {
 });
 
 var className = "";
-router.get(/(.+)(\W?)(\w+)\/(?:number|number\/)$/, function (req, res, next) {
+router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function (req, res, next) {
+    console.log("\nRequest url: " + req.url)
     var i = 0;
     while (typeof (req.params[i]) != "undefined") {
         console.log("param[" + i + "]: " + req.params[i]);
@@ -46,6 +47,16 @@ router.get(/(.+)(\W?)(\w+)\/(?:number|number\/)$/, function (req, res, next) {
                 return;
             }
             console.log("hijOO website title: " + windows.$("#contentHeaderTitle").html());
+            var trows = windows.$("tbody").first().children("tr");
+            windows.$(trows).each(function (index) {
+                if (windows.$(this).find("b").html() == className) {
+                    console.log("MATCH FOUND with class: " + className);
+                    var td = windows.$(this).children(":nth-child(2)");
+                    var link = windows.$(td).children("a").attr("href");
+                    console.log(link); 
+                }
+            });
+            //console.log(windows.$(trows).first().html());
         });
     res.send("in next functionnn for this route, in second get route");
 
