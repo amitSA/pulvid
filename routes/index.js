@@ -26,7 +26,7 @@ router.get(/(foo)(goo)abc/, function (req, res, next) {
     res.send("in second get route");
 });
 /**Throughout this route, req.className and req.linkG are two properties that are added to the req object **/
-router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqParams (req, res, next) {
+router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqClassName (req, res, next) {
     console.log("\nRequest url: " + req.url)
     var i = 0;
     while (typeof (req.params[i]) != "undefined") {
@@ -64,8 +64,8 @@ router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqParams (re
                 res.send(msg);  //if code reaches this point, then send the response and cease the calling of any more callbacks for this route 
             }
         });
-   // res.send("in next functionnn for this route, in second get route");
-}, function (req, res, next) {
+   
+}, function countWebcasts (req, res, next) {
     console.log("in third callback function");
     jsdom.env(req.linkG,
         ["https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"],
@@ -78,5 +78,7 @@ router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqParams (re
         });
 });
 
+var db = require("./database.js");
+db.execute();
 
 module.exports = router;
