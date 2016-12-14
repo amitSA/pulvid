@@ -25,20 +25,20 @@ router.get(/(foo)(goo)abc/, function (req, res, next) {
     }
     res.send("in second get route");
 });
-
-var className = "";
-router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function (req, res, next) {
+/**Throughout this route, req.className and req.linkG are two properties that are added to the req object **/
+router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqParams (req, res, next) {
     console.log("\nRequest url: " + req.url)
     var i = 0;
     while (typeof (req.params[i]) != "undefined") {
         console.log("param[" + i + "]: " + req.params[i]);
         i++;
     }
+    var cName = req.params[0] + " " + req.params[1];
+    cName = cName.charAt(0) == '/' ? cName.slice(1) : cName;
+    req.className = cName;
     next();
-}, function (req, res, next) {
-    var className = req.params[0] + " " + req.params[1];
-    className = className.charAt(0) == '/' ? className.slice(1) : className;
-    console.log("parsed className: " + className);
+}, function retrieveLink (req, res, next) {
+    console.log("parsed className: " + req.className);
     jsdom.env("https://webcast.ucsc.edu",
         ["https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"],
         function (err, windows) {
@@ -49,17 +49,33 @@ router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function (req, res, next)
             console.log("hijOO website title: " + windows.$("#contentHeaderTitle").html());
             var trows = windows.$("tbody").first().children("tr");
             windows.$(trows).each(function (index) {
-                if (windows.$(this).find("b").html() == className) {
-                    console.log("MATCH FOUND with class: " + className);
+                if (windows.$(this).find("b").html() == req.className) {
+                    console.log("MATCH FOUND with class: " + req.className);
                     var td = windows.$(this).children(":nth-child(2)");
                     var link = windows.$(td).children("a").attr("href");
-                    console.log(link); 
+                    console.log(link);
+                    req.linkG = link;
+                    return next();
                 }
             });
-            //console.log(windows.$(trows).first().html());
+            if (req.linkG == null) {
+                var msg = "no class was found matching the url paramter";
+                console.log(msg);
+                res.send(msg);  //if code reaches this point, then send the response and cease the calling of any more callbacks for this route 
+            }
         });
-    res.send("in next functionnn for this route, in second get route");
+   // res.send("in next functionnn for this route, in second get route");
+}, function (req, res, next) {
+    console.log("in third callback function");
+    jsdom.env(req.linkG,
+        ["https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"],
+        function (err, windows) {
+            console.log(req.className + " page's title: " + windows.$("#contentHeaderTitle").html());
+            var trows = windows.$("tbody").first().children("tr");
+            console.log(req.className + "'s number of recordings: " + trows.length);
 
+            res.send("Number of videos for " + req.className + ": " + trows.length);
+        });
 });
 
 
