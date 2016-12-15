@@ -1,9 +1,21 @@
 ﻿var express = require('express');
 var router = express.Router();
 
+//requiring external modules
 var jsdom = require('jsdom');
 
+//requiring this project's js files
+var db = require("./database.js");
+var utils = require("./util_babies.js");
 
+db.db_storeWebcastLink("node_class17", "nodelink17", function (err,reply) {
+    if (err) {
+        console.log("Error in 2nd main callback function: ");
+        utils.printAllKeyValues(err);
+        return;
+    }
+    console.log("[index.js]: test row was added)");
+});
 
 /**Throughout this route, req.className and req.linkG are two properties that are added to the req object **/
 router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqClassName (req, res, next) {
@@ -19,32 +31,48 @@ router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqClassName 
     next();
 }, function retrieveLink (req, res, next) {
     console.log("parsed className: " + req.className);
-    jsdom.env("https://webcast.ucsc.edu",
-        ["https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"],
-        function (err, windows) {
-            if (err) {
-                console.log("jsdom error while trying to load to main webcast-course-link");
-                return;
-            }
-            console.log("hijOO website title: " + windows.$("#contentHeaderTitle").html());
-            var trows = windows.$("tbody").first().children("tr");
-            windows.$(trows).each(function (index) {
-                if (windows.$(this).find("b").html() == req.className) {
-                    console.log("MATCH FOUND with class: " + req.className);
+    db.db_webcastLinkExist(req.className, function (err, linkRet) {
+        if (err) { throw err; }
+        if (linkRet != null) {
+            req.linkG = linkRet;
+            return next();
+        }
+        
+        jsdom.env("https://webcast.ucsc.edu",
+            ["https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"],
+            function (err, windows) {
+                if (err) {
+                    console.log("jsdom error while trying to load to main webcast-course-link");
+                    return;
+                }
+                console.log("'AllClasses' Website Title: " + windows.$("#contentHeaderTitle").html());
+                var trows = windows.$("tbody").first().children("tr");
+                windows.$(trows).each(function (index) {
                     var td = windows.$(this).children(":nth-child(2)");
                     var link = windows.$(td).children("a").attr("href");
-                    console.log(link);
-                    req.linkG = link;
-                    return next();
+                    var currClass = windows.$(this).find("b").html();
+                    db.db_storeWebcastLink(currClass, link, function (err, reply) {
+                        if (err) {
+                            if (err.errno === 1062) { //1062 is the error code for an ER_DUP_ENTRY_WITH_KEY_NAME result from an 'insert' query
+                                return console.log("[index.js]:Duplicate Entry Error ignored in 'retrieveLink' callback");
+                            }
+                            throw err; //else, if the error was not the checked error above, throw it and exit/crash the hIJOO program
+                        } 
+                    });
+                    if (currClass == req.className) {
+                        console.log("MATCH FOUND with class: " + req.className);
+                        console.log(link);
+                        req.linkG = link;
+                        return next();
+                    }
+                });
+                if (req.linkG == null) {
+                    var msg = "no class was found matching the url paramter";
+                    console.log(msg);
+                    res.send(msg);  //if code reaches this point, then send the response and cease the calling of any more callbacks for this route 
                 }
             });
-            if (req.linkG == null) {
-                var msg = "no class was found matching the url paramter";
-                console.log(msg);
-                res.send(msg);  //if code reaches this point, then send the response and cease the calling of any more callbacks for this route 
-            }
-        });
-   
+    });
 }, function countWebcasts (req, res, next) {
     console.log("in third callback function");
     jsdom.env(req.linkG,
@@ -58,7 +86,7 @@ router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqClassName 
         });
 });
 
-var db = require("./database.js");
-db.execute();
+var dbTest = require("./database_test.js");
+//dbTest.execute();
 
 module.exports = router;
