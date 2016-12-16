@@ -27,21 +27,26 @@ function iterateMainWebcastLink(callback) {
     var linksToPull = [utils.jquery_link];
 
     jsdom.env(
-        mainLink,
+        loadLink,
         linksToPull,
         function (err, windows) {
             if (err) { throw err;}
             var $ = windows.$;
             var trows = $("tbody").children("tr");
             var currRow = $(trows[0]);
+            var tot_len = trows.length;
             var iterator = new It.Iterator();
             iterator.setIterateFunction(function () {
-                if (iterator.getVal() == null) {
+                if (iterator.index == 0) {
                     iterator.length = trows.length;
                     iterator.setVal(conv_Row1(currRow, $));
-                } else {
+                    iterator.index++;
+                } else if (iterator.index == tot_len){
+                    iterator.index = 0;
+                }else {
                     currRow = $(currRow).next();
                     iterator.setVal(conv_Row1(currRow, $));
+                    iterator.index++;
                 } 
             });
             

@@ -39,12 +39,9 @@ router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqClassName 
                 console.log("jsdom error while trying to load to main webcast-course-link");
                 return;
             }
-            var length = iterator.length;
-            
-            for (var i = 0; i < length; i++) {
+            while (iterator.index!=0) {
                 var retVal = iterator.getVal();
                 var currClass = retVal[0], link = retVal[1];
-               
                 iterator.iterate();
                 db.db_storeWebcastLink(currClass, link, function (err, reply) {
                     if (err) {
@@ -54,7 +51,6 @@ router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqClassName 
                         throw err; //else, if the error was not the checked error above, throw it and exit/crash the hIJOO program
                     }
                 });
-
                 if (currClass == req.className) {
                     console.log("MATCH FOUND with class: " + req.className);
                     req.linkG = link;
@@ -70,15 +66,12 @@ router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqClassName 
     });
 }, function countWebcasts (req, res, next) {
     console.log("in third callback function");
-    jsdom.env(req.linkG,
-        ["https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"],
-        function (err, windows) {
-            console.log(req.className + " page's title: " + windows.$("#contentHeaderTitle").html());
-            var trows = windows.$("tbody").first().children("tr");
-            console.log(req.className + "'s number of recordings: " + trows.length);
+    linkParse.iterateClassWebcastLink(req.linkG, function (iter) {
+        res.send(req.className + " has " + iter.length + " webcast videos");
+        
+    });
 
-            res.send("Number of videos for " + req.className + ": " + trows.length);
-        });
+
 });
 
 router.get("/testt", function (req, res, next) {
