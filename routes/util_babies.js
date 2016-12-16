@@ -2,6 +2,9 @@
 exports.jquery_link = "https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js";
 exports.main_webpage = "https://webcast.ucsc.edu/";
 
+//for testing out a linkparse.js function
+exports.ams131_link = "http://matterhorn2-util.lt.ucsc.edu/search/?checkForLogin&seriestitle=AMS-203-LEC-01-2168-22870"; 
+
 exports.printAllKeyValues = function (obj) {
     unwind(1, obj);
 }

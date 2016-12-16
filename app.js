@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/webcast/', routes);
 app.use('/users/', users);
 
-
+console.log(parseInt(" 6   "));
 
 
 // catch 404 and forward to error handler

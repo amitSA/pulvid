@@ -4,7 +4,7 @@ var sprintf = require('sprintf');
 var utils = require("./util_babies.js");
 
 var pool = mysql.createPool({
-    connectionLimit: 10,
+    connectionLimit: 1,  //it is 1 just for testing hiJO
     host: "localhost",
     user: "amit",
     password: "mediumnight",
@@ -20,13 +20,13 @@ function db_webcastLinkExist(className, callback) {
     pool.getConnection(function (err, connection) {
         if (err) { throw err; }
         var sql = sprintf("SELECT webcast_link FROM %s WHERE class_name='%s'",allCLinks_tableName, className);
-        //console.log("Sql in db_webcast...: " + sql);
         connection.query(sql, function (err, rows) {
             //because class_name is a primary_key property, every row has a unique className property, thus only one row's class_name property can match the 'className' var (thus only this row if exists is in the rows object)
+            connection.release();
             if (err) {
                 return callback(err, null);
             }
-            connection.release();
+            
             if (rows.length > 0) {
                 return callback(null,rows[0]["webcast_link"]);
             } else {
@@ -59,10 +59,12 @@ function db_storeWebcastLink(className, link, callback) {
         var sql = sprintf("INSERT INTO %s (class_name,webcast_link) VALUES ('%s','%s')", allCLinks_tableName, className, link); 
         //console.log("sql: " + sql);
         connection.query(sql, function (err, reply) {
+            connection.release();
             if (err) {
+                console.log("error with this entry: " + className);
                 return callback(err,reply);
             }
-            connection.release();
+            console.log("entry stored: " + className);
             callback(null, reply);  //technically I can pass in the err object b/c if the code did reach this point then the err object would have to be null or undefined
         });
 

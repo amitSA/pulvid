@@ -21,8 +21,9 @@ function getSimDOM_ForLink(link, jquery_attached, callback) {
     );
 };
 
+
 function iterateMainWebcastLink(callback) {
-    var mainLink = utils.main_webpage;
+    var loadLink = utils.main_webpage;
     var linksToPull = [utils.jquery_link];
 
     jsdom.env(
@@ -33,15 +34,14 @@ function iterateMainWebcastLink(callback) {
             var $ = windows.$;
             var trows = $("tbody").children("tr");
             var currRow = $(trows[0]);
-            var initVal = conv_Row(currRow,$);  
             var iterator = new It.Iterator();
             iterator.setIterateFunction(function () {
                 if (iterator.getVal() == null) {
                     iterator.length = trows.length;
-                    iterator.setVal(conv_Row(currRow, $));
+                    iterator.setVal(conv_Row1(currRow, $));
                 } else {
                     currRow = $(currRow).next();
-                    iterator.setVal(conv_Row(currRow, $));
+                    iterator.setVal(conv_Row1(currRow, $));
                 } 
             });
             
@@ -49,13 +49,59 @@ function iterateMainWebcastLink(callback) {
         }                                 // this works b/c the iterate() function will return the calling iterate object
     );
 
-    function conv_Row(tr, $) {
+    function conv_Row1(tr, $) {
         var classTmp = $(tr).find("b").html()
         var linkTmp = $(tr).children(":nth-child(2)").children("a").attr("href");
         return [classTmp, linkTmp];
     }
 }
 
+
+function iterateClassWebcastLink(classLink, callback) {
+    var loadLink = classLink;
+    var linksToPull = [utils.jquery_link];
+
+    jsdom.env(
+        loadLink,
+        linksToPull,
+        function (err, windows) {
+            if (err) { throw err; }
+            var $ = windows.$;
+            var trows = $("tbody").children("tr");
+            var tot_len = trows.length;
+            var currRow = $(trows[0]);
+            var iterator = new It.Iterator();
+            iterator.setIterateFunction(function () {
+                if (iterator.index == 0) {
+                    iterator.length = tot_len;
+                    iterator.setVal(conv_Row2(currRow, $));
+                    iterator.index++;
+                } else if (iterator.index == tot_len) {
+                    iterator.setVal(null);
+                    iterator.index = 0;
+                } else{
+                    currRow = $(currRow).next();
+                    iterator.setVal(conv_Row2(currRow, $));
+                    iterator.index++;
+                }
+            });
+
+            callback(iterator.iterate()); 
+        }                                 
+    );
+
+    function conv_Row2(tr, $) {
+        var index = $(tr).children(":nth-child(2)").find("a").html();
+        index = index.slice(index.indexOf("-") + 1);
+        index = parseInt(index);
+        var linkTmp = $(tr).children(":nth-child(2)").find("a").attr("href");
+        //console.log("\nin 2nd link processing-  index: " + index + "  linkTmp: " + linkTmp);
+        return [index, linkTmp];
+    }
+}
+
 exports.getSimDOM_ForLink = getSimDOM_ForLink; 
+
+exports.iterateClassWebcastLink = iterateClassWebcastLink;
 
 exports.iterateMainWebcastLink = iterateMainWebcastLink;

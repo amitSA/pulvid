@@ -34,33 +34,33 @@ router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqClassName 
             req.linkG = linkRet;
             return next();
         }
-        linkParse.getSimDOM_ForLink("https://webcast.ucsc.edu", true,
-        function (err, windows) {
+        linkParse.iterateMainWebcastLink(function (iterator) {
             if (err) {
                 console.log("jsdom error while trying to load to main webcast-course-link");
                 return;
             }
-            console.log("'AllClasses' Website Title: " + windows.$("#contentHeaderTitle").html());
-            var trows = windows.$("tbody").first().children("tr");
-            windows.$(trows).each(function (index) {
-                var td = windows.$(this).children(":nth-child(2)");
-                var link = windows.$(td).children("a").attr("href");
-                var currClass = windows.$(this).find("b").html();
+            var length = iterator.length;
+            
+            for (var i = 0; i < length; i++) {
+                var retVal = iterator.getVal();
+                var currClass = retVal[0], link = retVal[1];
+               
+                iterator.iterate();
                 db.db_storeWebcastLink(currClass, link, function (err, reply) {
                     if (err) {
                         if (err.errno === 1062) { //1062 is the error code for an ER_DUP_ENTRY_WITH_KEY_NAME result from an 'insert' query
-                            return console.log("[index.js]:Duplicate Entry Error ignored in 'retrieveLink' callback");
+                            return;// console.log("[index.js]:Duplicate Entry Error ignored in 'retrieveLink' callback");
                         }
                         throw err; //else, if the error was not the checked error above, throw it and exit/crash the hIJOO program
-                    } 
+                    }
                 });
+
                 if (currClass == req.className) {
                     console.log("MATCH FOUND with class: " + req.className);
-                    console.log(link);
                     req.linkG = link;
                     return next();
                 }
-            });
+            }
             if (req.linkG == null) {
                 var msg = "no class was found matching the url paramter";
                 console.log(msg);
@@ -83,13 +83,12 @@ router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqClassName 
 
 router.get("/testt", function (req, res, next) {
 
-    linkParse.iterateMainWebcastLink(function (iterator) {
-
-        for (var i = 0; i < iterator.length; i++) {
-            console.log(iterator.getVal());
-            iterator.iterate();
+    linkParse.iterateClassWebcastLink(utils.ams131_link,function (iter) {
+        console.log("iterator length: " + iter.length);
+        while (iter.index!=0) {
+            console.log(iter.getVal());
+            iter.iterate();
         }
-
     });
     res.send("In test route");
     

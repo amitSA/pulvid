@@ -4,7 +4,8 @@
 function Iterator() {
     var value = null;
     var _iterate = null;
-   
+
+    this.index = 0;  // in Iterator, the indicing starts of at 1, so 0 is an invalid state
     this.length = null;
     this.setIterateFunction = function (func) {
         _iterate = func;
