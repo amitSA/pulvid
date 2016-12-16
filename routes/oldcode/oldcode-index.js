@@ -19,3 +19,14 @@ router.get(/(foo)(goo)abc/, function (req, res, next) {
     }
     res.send("in second get route");
 });
+
+
+//it was at the top, but under all the require statements of index.js
+db.db_storeWebcastLink("node_class17", "nodelink17", function (err, reply) {
+    if (err) {
+        console.log("Error in 2nd main callback function: ");
+        utils.printAllKeyValues(err);
+        return;
+    }
+    console.log("[index.js]: test row was added)");
+});

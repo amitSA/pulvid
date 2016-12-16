@@ -1,7 +1,8 @@
 ﻿
+exports.jquery_link = "https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js";
+
 exports.printAllKeyValues = function (obj) {
     unwind(1, obj);
-
 }
 
 function unwind(indent, obj) {

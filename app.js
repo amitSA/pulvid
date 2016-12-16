@@ -4,8 +4,8 @@ var logger = require('morgan'); //SEE WHAT HAPPENS WHEN I REMOVE THE LOGGER
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+var routes = require('./routes/index.js');
+var users = require('./routes/oldcode/users.js');
 var app = express();
 
 // view engine setup

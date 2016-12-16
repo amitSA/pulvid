@@ -27,7 +27,6 @@ function db_webcastLinkExist(className, callback) {
                 return callback(err, null);
             }
             connection.release();
-            utils.printAllKeyValues(rows);
             if (rows.length > 0) {
                 return callback(null,rows[0]["webcast_link"]);
             } else {
