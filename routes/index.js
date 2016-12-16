@@ -83,11 +83,10 @@ router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqClassName 
 
 router.get("/testt", function (req, res, next) {
 
-    
     linkParse.iterateMainWebcastLink(function (iterator) {
-        var length = iterator.length;
-        for (var i = 0; i < length; i++) {
-            console.log(iterator.get());
+
+        for (var i = 0; i < iterator.length; i++) {
+            console.log(iterator.getVal());
             iterator.iterate();
         }
 

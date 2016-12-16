@@ -33,15 +33,27 @@ function iterateMainWebcastLink(callback) {
             var $ = windows.$;
             var trows = $("tbody").children("tr");
             var currRow = $(trows[0]);
-            var iterator = new It.Iterator(trows.length, $(currRow).find("b").html(), function () {
-                currRow = $(currRow).next();
-                this.value = $(currRow).find("b").html();
+            var initVal = conv_Row(currRow,$);  
+            var iterator = new It.Iterator();
+            iterator.setIterateFunction(function () {
+                if (iterator.getVal() == null) {
+                    iterator.length = trows.length;
+                    iterator.setVal(conv_Row(currRow, $));
+                } else {
+                    currRow = $(currRow).next();
+                    iterator.setVal(conv_Row(currRow, $));
+                } 
             });
-            callback(iterator);
-        }
+            
+            callback(iterator.iterate()); //calling the iterator once so that now it points to the first element in the list it is iterating over
+        }                                 // this works b/c the iterate() function will return the calling iterate object
     );
 
-
+    function conv_Row(tr, $) {
+        var classTmp = $(tr).find("b").html()
+        var linkTmp = $(tr).children(":nth-child(2)").children("a").attr("href");
+        return [classTmp, linkTmp];
+    }
 }
 
 exports.getSimDOM_ForLink = getSimDOM_ForLink; 
