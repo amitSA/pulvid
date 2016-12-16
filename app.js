@@ -24,12 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/webcast/', routes);
 app.use('/users/', users);
 
-/*
-var i = 11;
-var obj = { keys: { first: "property" }, height: 13, star: "sixtyname" };
-var util_b = require("./routes/util_babies.js");
-util_b.printAllKeyValues(obj);*/
-//console.log("type of : " + (typeof i == 'number'));
+
 
 
 // catch 404 and forward to error handler

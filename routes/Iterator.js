@@ -1,11 +1,17 @@
 ﻿
 
 
-function Iterator(_iterate,length, initialVal) {
-    this.length = length;
-    this._iterate = _iterate; //iterate should be a function that will be called when ever client calls nextElement();
-    this.value = initialVal;
-    this.nextElement = function () {
-        this.iterate();
+function Iterator(len, initialVal,_iterate) {
+    var value = initialVal;
+    this.iterate = function () {
+       _iterate();
+    }
+    this.get = function () {
+        return value;
+    }
+    this.length = function () {
+        return len;
     }
 }
+
+exports.Iterator = Iterator;

@@ -10,6 +10,9 @@ var linkParse = require("./linkparse.js");
 var utils = require("./util_babies.js");
 
 
+
+
+
 /**Throughout this route, req.className and req.linkG are two properties that are added to the req object **/
 router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqClassName (req, res, next) {
     //console.log("\nRequest url: " + req.url)
@@ -78,7 +81,23 @@ router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqClassName 
         });
 });
 
-var dbTest = require("./database_test.js");
-//dbTest.execute();
+router.get("/testt", function (req, res, next) {
+
+    
+    linkParse.iterateMainWebcastLink(function (iterator) {
+        var length = iterator.length;
+        for (var i = 0; i < length; i++) {
+            console.log(iterator.get());
+            iterator.iterate();
+        }
+
+    });
+    res.send("In test route");
+    
+});
+
+
+/*var dbTest = require("./database_test.js");
+dbTest.execute();*/
 
 module.exports = router;
