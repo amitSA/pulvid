@@ -67,7 +67,9 @@ router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqClassName 
 }, function countWebcasts (req, res, next) {
     console.log("in third callback function");
     linkParse.iterateClassWebcastLink(req.linkG, function (iter) {
-        res.send(req.className + " has " + iter.length + " webcast videos");
+        var resp_msg = req.className + " has " + iter.length + " webcast videos";
+        console.log(resp_msg);
+        res.send(resp_msg);
         
     });
 
