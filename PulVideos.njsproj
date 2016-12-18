@@ -35,8 +35,10 @@
     <Compile Include="routes\database.js" />
     <Compile Include="routes\database_test.js" />
     <Compile Include="routes\index.js" />
+    <Compile Include="routes\Iterator.js" />
+    <Compile Include="routes\linkparse.js" />
     <Compile Include="routes\oldcode\oldcode-index.js" />
-    <Compile Include="routes\users.js" />
+    <Compile Include="routes\oldcode\users.js" />
     <Compile Include="bin\www" />
     <Compile Include="routes\util_babies.js" />
     <Content Include="package.json" />

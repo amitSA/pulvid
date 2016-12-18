@@ -116,7 +116,7 @@ function getSpecificVideoLinks(spec_link, callback) {
                 return callback(err, null, null);
             }
             var $ = window.$;
-            $("#oc_download-button").trigger("click");
+            //$("#oc_download-button").trigger("click");
             var div = $("#oc_download_video");
             console.log("\ndiv contentshiJOO: " +  $("body").html());
             var link1 = $(div).children(":nth-child(1)").attr("href");
