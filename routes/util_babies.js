@@ -4,6 +4,8 @@ exports.main_webpage = "https://webcast.ucsc.edu/";
 
 //for testing out a linkparse.js function
 exports.ams131_link = "http://matterhorn2-util.lt.ucsc.edu/search/?checkForLogin&seriestitle=AMS-203-LEC-01-2168-22870"; 
+exports.ams203_v18Link = "http://matterhorn2-player-1.lt.ucsc.edu:8080/engage/ui/player.html?id=b5c83880-6306-4a9e-a7f8-7ba09fab5d02";
+
 
 exports.printAllKeyValues = function (obj) {
     unwind(1, obj);

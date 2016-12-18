@@ -106,7 +106,7 @@ function iterateClassWebcastLink(classLink, callback) {
 }
 
 function getSpecificVideoLinks(spec_link, callback) {
-    var loadLink = classLink;
+    var loadLink = spec_link;
     var linksToPull = [utils.jquery_link];
     jsdom.env(
         loadLink,
@@ -116,10 +116,11 @@ function getSpecificVideoLinks(spec_link, callback) {
                 return callback(err, null, null);
             }
             var $ = window.$;
-            var divArray = $("oc_download_video");
-            console.log("\ndivArray length(it should be 1) is: " + divArray.length);
-            var link1 = $(divArray).children("nth-child(1)").attr("href");
-            var link2 = $(divArray).children("nth-child(2)").attr("href");
+            $("#oc_download-button").trigger("click");
+            var div = $("#oc_download_video");
+            console.log("\ndiv contentshiJOO: " +  $("body").html());
+            var link1 = $(div).children(":nth-child(1)").attr("href");
+            var link2 = $(div).children(":nth-child(2)").attr("href");
             callback(err, link1, link2);  //I could just pass null instead of err, b/c at this point in the function the err object has to be undefined or null
         }
     );

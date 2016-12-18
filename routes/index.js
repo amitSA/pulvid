@@ -77,14 +77,17 @@ router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqClassName 
 
 router.get("/testt", function (req, res, next) {
 
-    linkParse.iterateClassWebcastLink(utils.ams131_link,function (iter) {
-        console.log("iterator length: " + iter.length);
-        while (iter.index!=0) {
-            console.log(iter.getVal());
-            iter.iterate();
+   
+
+    var link = utils.ams203_v18Link;
+    linkParse.getSpecificVideoLinks(link, function (err, link1,link2) {
+        if (err) {
+            console.log("Error in /test route hIJO in index.js: error occured in trying to get the presentation and presenter links from the test ams203-18th-lecture- link");
+            throw err;
         }
-    });
-    res.send("In test route");
+        console.log("link1: " + link1 + "  link2: " + link2);
+        res.send("link1: " + link1 + "  link2: " + link2);
+    })
     
 });
 
