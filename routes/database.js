@@ -148,7 +148,6 @@ function db_createClassTable(className, callback) {
             connection.release();
             callback(err, reply);
         });
-
     });
 }
 function db_createStoreClassTableLinks(className, number, list_link, one_link, two_link, callback) {

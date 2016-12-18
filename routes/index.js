@@ -70,7 +70,6 @@ router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqClassName 
         var resp_msg = req.className + " has " + iter.length + " webcast videos";
         console.log(resp_msg);
         res.send(resp_msg);
-        
     });
 
 
