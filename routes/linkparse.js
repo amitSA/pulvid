@@ -1,5 +1,6 @@
 ﻿//requing external modules
 var jsdom = require('jsdom');
+var fs = require('fs');
 
 //requiring js files created for this project
 var utils = require("./util_babies");
@@ -124,7 +125,7 @@ function getSpecificVideoLinks(spec_link, callback) {
             var $ = window.$;
             //$("#oc_download-button").trigger("click");
             var div = $("#oc_download_video");
-            console.log("\ndiv contentshiJOO: " + $(div).html());
+            //console.log("\ndiv contentshiJOO: " + $(div).html());
 
             var link1 = $(div).children(":nth-child(1)").attr("href");
             var link2 = $(div).children(":nth-child(2)").attr("href");
@@ -159,7 +160,9 @@ function getSpecificVideoLinks(spec_link, callback) {
                     var sub2 = body.substring(ind);
                     body = sub1 + str_toAdd + sub2;
 
-                    body = body + "alert(Opencast.Watch.getDescriptionEpisodeURL());";
+                    var ajax_func = fs.readFileSync("./public/javascripts/test-ajax.js");
+                    console.log("read function: " + ajax_func);
+                    body = body + ajax_func;
 
                     //console.log("final string: \n" + body + " \n");
                 }
@@ -169,7 +172,7 @@ function getSpecificVideoLinks(spec_link, callback) {
                 cb(null, body);
             });
         },
-        virtualConsole: jsdom.createVirtualConsole().sendTo(console) 
+        virtualConsole: jsdom.createVirtualConsole().sendTo(console, {omitJsdomErrors:false}) 
     });
 }
 

@@ -103,7 +103,7 @@ module.exports = router;
 /*$.ajax({
     type: "POST",
     url: "http://localhost:3000/webcast/redir",
-    data: { prop1: "hiJOO", prop2: "someother propertyy" },
+    data: { d1: Opencast.Watch.getDescriptionEpisodeURL() },
     success: null,
     dataType: "text"
 });*/
