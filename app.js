@@ -24,6 +24,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/webcast/', routes);
 app.use('/users/', users);
 
+app.post("/redir", function (req, res) {
+    //console.log("in POST:/redir->" + utils.printAllKeyValues(req));
+    res.send("POST opperation recieved");
+});
 
 
 
@@ -36,11 +40,11 @@ app.use(function (req, res, next) {
 
 if (app.get("env") === "development") {
     app.use(function (err, req, res, next) {
-        res.status(err.status || 400);
+        res.status(err.status || 402);
         res.send("Error, this route was not found hijoOOOOOo");
     });
 }
-var portNum = 3001;
+var portNum = 3000;
 app.listen(portNum, function (err) {
     if (err) {
         console.log('Error HIJOO for listening on port ' + portNum +"!");

@@ -76,9 +76,6 @@ router.get(/(.+)(?:%20|\+)(.+)\/(?:number|number\/)$/, function logReqClassName 
 });
 
 router.get("/testt", function (req, res, next) {
-
-   
-
     var link = utils.ams203_v18Link;
     linkParse.getSpecificVideoLinks(link, function (err, link1,link2) {
         if (err) {
@@ -89,11 +86,20 @@ router.get("/testt", function (req, res, next) {
         //res.send("link1: " + link1 + "  link2: " + link2);
         res.send(link1);
     })
-    
 });
+
 
 
 /*var dbTest = require("./database_test.js");
 dbTest.execute();*/
 
 module.exports = router;
+
+
+/*$.ajax({
+    type: "POST",
+    url: "http://localhost:3000/webcast/redir",
+    data: { prop1: "hiJOO", prop2: "someother propertyy" },
+    success: null,
+    dataType: "text"
+});*/

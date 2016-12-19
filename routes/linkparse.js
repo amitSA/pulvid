@@ -105,6 +105,12 @@ function iterateClassWebcastLink(classLink, callback) {
     }
 }
 
+virtualConsole = jsdom.createVirtualConsole();
+
+virtualConsole.on("log", function (message) {
+    console.log("virtual console caught message -> " + message);
+});
+
 function getSpecificVideoLinks(spec_link, callback) {
     var loadLink = spec_link;
     var linksToPull = [utils.jquery_link];
@@ -140,18 +146,30 @@ function getSpecificVideoLinks(spec_link, callback) {
                 if (err) { throw err; }
                 
                 //console.log(body.substring(0, body.length > 100 ? 100 : body.length) + "\n\n");
-                var ind = body.indexOf("getDescriptionEpisodeURL()");
-                if (ind != -1) {
-                    //console.log("baseUrl: " + resource.baseUrl + "\n\n");
+                //var ind = body.indexOf("getDescriptionEpisodeURL()");
+                if (resource.url.path === "/engage/ui/js/player/watch.js") {
+                    //console.log(resource.baseUrl);
                     console.log("parsed-url: " + JSON.stringify(resource.url) + "\n\n");
+                    var str_toLoc = '$.log("Start parsing servicedata.json");\n';
+                    var str_toAdd = "\nconsole.log('url: ' + data.plugin_urls.description.episode);\n";
+                    //var str_toAdd = "console.log('HIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJHIJv');";
+                    //var str_toAdd = '';
+                    var ind = body.indexOf(str_toLoc);
+                    var sub1 = body.substring(0, ind);
+                    var sub2 = body.substring(ind);
+                    body = sub1 + str_toAdd + sub2;
+
+                    body = body + "alert(Opencast.Watch.getDescriptionEpisodeURL());";
+
+                    //console.log("final string: \n" + body + " \n");
                 }
-                var code = "console.log('url: '+ Opencast.Watch.getDescriptionEpisodeURL());" +
+                /*var code = "console.log('url: '+ Opencast.Watch.getDescriptionEpisodeURL());" +
                     "console.log('data: '+ Opencast.Player.getMediaPackageId())";
-                body = code + body;
+                body = code + body*/;
                 cb(null, body);
             });
         },
-        virtualConsole: jsdom.createVirtualConsole().sendTo(console)
+        virtualConsole: jsdom.createVirtualConsole().sendTo(console) 
     });
 }
 
