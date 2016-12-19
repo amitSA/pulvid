@@ -89,7 +89,8 @@ router.get("/testt", function (req, res, next) {
 });
 
 router.post("/redir", function (req, res) {
-    console.log("in POST:/redir->" + utils.printAllKeyValues(req));
+    //console.log("in POST:/redir->" + utils.printAllKeyValues(req));
+    console.log(req.body);
     res.send("POST opperation recieved");
 });
 
