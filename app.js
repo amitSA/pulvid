@@ -3,10 +3,13 @@ var path = require('path');
 var logger = require('morgan'); //SEE WHAT HAPPENS WHEN I REMOVE THE LOGGER
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var http = require('http');
 
 var routes = require('./routes/index.js');
 var users = require('./routes/oldcode/users.js');
 var app = express();
+
+app.set('port', process.env.PORT || 3000);
 
 // view engine setup
 //app.set('views', path.join(__dirname, 'views'));
@@ -24,10 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/webcast/', routes);
 app.use('/users/', users);
 
-app.post("/redir", function (req, res) {
-    //console.log("in POST:/redir->" + utils.printAllKeyValues(req));
-    res.send("POST opperation recieved");
-});
+
 
 
 
@@ -44,15 +44,20 @@ if (app.get("env") === "development") {
         res.send("Error, this route was not found hijoOOOOOo");
     });
 }
+
 var portNum = 3000;
-app.listen(portNum, function (err) {
+
+/*app.listen(portNum, function (err) {
     if (err) {
         console.log('Error HIJOO for listening on port ' + portNum +"!");
     }
     console.log('Example app listening on port ' + portNum + "!");
 
-});
+});*/
 
+http.createServer(app).listen(app.get('port'), function () {
+    console.log('Express server listening on port ' + app.get('port'));
+});
 
 
 

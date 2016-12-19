@@ -88,7 +88,10 @@ router.get("/testt", function (req, res, next) {
     })
 });
 
-
+router.post("/redir", function (req, res) {
+    console.log("in POST:/redir->" + utils.printAllKeyValues(req));
+    res.send("POST opperation recieved");
+});
 
 /*var dbTest = require("./database_test.js");
 dbTest.execute();*/
