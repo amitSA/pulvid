@@ -85,8 +85,9 @@ router.get("/testt", function (req, res, next) {
             console.log("Error in /test route hIJO in index.js: error occured in trying to get the presentation and presenter links from the test ams203-18th-lecture- link");
             throw err;
         }
-        console.log("link1: " + link1 + "  link2: " + link2);
-        res.send("link1: " + link1 + "  link2: " + link2);
+        //console.log("link1: " + link1 + "  link2: " + link2);
+        //res.send("link1: " + link1 + "  link2: " + link2);
+        res.send(link1);
     })
     
 });
